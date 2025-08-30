@@ -28,7 +28,8 @@
     {% else %}
       <p class="text-muted mt-3">No reports saved yet.</p>
     {% endif %}
-    <a href="{{ url_for('index') }}" class="btn btn-outline-secondary mt-3">Back to Dashboard</a>
+    <a class="btn btn-info" href="{{ url_for('compare_ui') }}?report1={{ report_name }}">Compare Reports</a>
+    <a class="btn btn-outline-secondary mt-3" href="{{ url_for('index') }}">Back to Dashboard</a>
   </div>
 </div>
 {% endblock %}

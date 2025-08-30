@@ -1,79 +1,67 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-lg-10">
-    <h2>Compare Reports</h2>
+<h2>Compare Reports</h2>
 
-    {% if reports %}
-      <form method="POST" class="mb-4">
-        <div class="row g-2">
-          <div class="col-md-5">
-            <label for="report1" class="form-label">Report 1</label>
-            <select id="report1" name="report1" class="form-select">
-              {% for r in reports %}
-                <option value="{{ r }}" {% if r == report1 %}selected{% endif %}>{{ r }}</option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <div class="col-md-5">
-            <label for="report2" class="form-label">Report 2</label>
-            <select id="report2" name="report2" class="form-select">
-              {% for r in reports %}
-                <option value="{{ r }}" {% if r == report2 %}selected{% endif %}>{{ r }}</option>
-              {% endfor %}
-            </select>
-          </div>
-
-          <div class="col-md-2 align-self-end">
-            <button type="submit" class="btn btn-primary w-100">Compare</button>
-          </div>
-        </div>
-      </form>
-    {% endif %}
-
-    {% if diff %}
-      <div class="mb-4">
-        <h4>New Findings</h4>
-        {% if diff.new_findings %}
-          <ul class="list-group">
-            {% for f in diff.new_findings %}
-              <li class="list-group-item list-group-item-warning">{{ f }}</li>
+<form method="POST" class="mb-3">
+    <div class="mb-3">
+        <label for="report1">Select Report 1</label>
+        <select name="report1" id="report1" class="form-select" required>
+            <option value="">-- Choose --</option>
+            {% for r in reports %}
+                <option value="{{ r }}">{{ r }}</option>
             {% endfor %}
-          </ul>
-        {% else %}
-          <p class="text-muted">No new findings.</p>
-        {% endif %}
-      </div>
-
-      <div class="mb-4">
-        <h4>Resolved Findings</h4>
-        {% if diff.resolved_findings %}
-          <ul class="list-group">
-            {% for f in diff.resolved_findings %}
-              <li class="list-group-item list-group-item-success">{{ f }}</li>
-            {% endfor %}
-          </ul>
-        {% else %}
-          <p class="text-muted">No resolved findings.</p>
-        {% endif %}
-      </div>
-
-      {% if explanation %}
-        <div class="mb-4">
-          <h4>AI Explanation</h4>
-          <div class="card p-3 bg-light" style="white-space: pre-wrap;">
-            {{ explanation | safe }}
-          </div>
-        </div>
-      {% endif %}
-    {% endif %}
-
-    <div class="mt-3">
-      <a href="{{ url_for('index') }}" class="btn btn-secondary">Back</a>
+        </select>
     </div>
 
-  </div>
-</div>
-{% endblock %}
+    <div class="mb-3">
+        <label for="report2">Select Report 2</label>
+        <select name="report2" id="report2" class="form-select" required>
+            <option value="">-- Choose --</option>
+            {% for r in reports %}
+                <option value="{{ r }}">{{ r }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
+    <button type="submit" class="btn btn-primary">Analyze & Compare</button>
+</form>
+
+{% if diff %}
+<div class="mt-4">
+    <h4>Comparison Result</h4>
+    <div class="card p-3 bg-light mb-3">
+        <h5>New Findings in Report 2</h5>
+        <ul>
+            {% for f in diff.new_findings %}
+            <li>{{ f }}</li>
+            {% else %}
+            <li>No new findings</li>
+            {% endfor %}
+        </ul>
+
+        <h5>Resolved Findings from Report 1</h5>
+        <ul>
+            {% for f in diff.resolved_findings %}
+            <li>{{ f }}</li>
+            {% else %}
+            <li>No resolved findings</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <h4>Score Card</h4>
+    <table class="table table-sm table-bordered">
+        <tr><th>Metric</th><th>Value</th></tr>
+        <tr><td>Report 1 Issues</td><td>{{ score_card.report1_issues }}</td></tr>
+        <tr><td>Report 2 Issues</td><td>{{ score_card.report2_issues }}</td></tr>
+        <tr><td>New Issues</td><td>{{ score_card.new_issues }}</td></tr>
+        <tr><td>Resolved Issues</td><td>{{ score_card.resolved_issues }}</td></tr>
+    </table>
+
+    <h4>AI Explanation</h4>
+    <div class="card p-3 bg-light" style="white-space: pre-wrap;">
+        {{ explanation | safe }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

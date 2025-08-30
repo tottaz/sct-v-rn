@@ -92,7 +92,7 @@
       <div class="d-flex gap-2">
         <a class="btn btn-primary" href="{{ url_for('index') }}">Back</a>
         <a class="btn btn-outline-secondary" href="/">Run another scan</a>
-        <button class="btn btn-info" id="compareBtn">Compare Reports</button>
+        <a class="btn btn-info" href="{{ url_for('compare_ui') }}?report1={{ report_name }}">Compare Reports</a>
         <button class="btn btn-warning" id="askAiBtn">Chat with AI</button>
         <a href="{{ url_for('ask_ui') }}?report={{ report_filename }}" class="btn btn-secondary">Ask AI about this report</a>
       </div>

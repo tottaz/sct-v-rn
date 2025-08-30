@@ -479,10 +479,10 @@ def delete_report(report_name):
 def view_report(report_name):
     try:
         report = load_report(report_name)
-        return render_template("report.html", report=report, config=CONFIG)
+        return render_template("report.html", report=report, config=CONFIG, report_name=report_name)
     except Exception as e:
         flash(f"Could not load report: {e}", "danger")
-        return redirect(url_for("reports"))
+        return redirect(url_for("reports_list"))
 
 
 # List and delete reports (HTML)
@@ -512,6 +512,7 @@ def ask_ui():
     selected_report = request.args.get("report")
     reports = list_reports()
     context = ""
+    task = "summary"
 
     if selected_report and selected_report in reports:
         context = json.dumps(load_report(selected_report), indent=2)
@@ -519,15 +520,26 @@ def ask_ui():
     if request.method == "POST":
         question = request.form.get("question")
         chosen_report = request.form.get("report_select")
+        task = request.form.get("task", "summary")
+
         if chosen_report:
             context = json.dumps(load_report(chosen_report), indent=2)
-        answer = ai_explain(question, context=context)
 
-    return render_template("ask.html",
-                           question=question,
-                           answer=answer,
-                           reports=reports,
-                           selected_report=selected_report)
+        # if no freeform question but a task was chosen -> use ai_explain_report
+        if not question and chosen_report:
+            report_data = load_report(chosen_report)
+            answer = ai_explain_report(report_data, task=task)
+        else:
+            answer = ai_explain(question, context=context)
+
+    return render_template(
+        "ask.html",
+        question=question,
+        answer=answer,
+        reports=reports,
+        selected_report=selected_report,
+        task=task
+    )
 
 
 def ai_explain_report(report, task="summary"):
@@ -545,21 +557,51 @@ def ai_explain_report(report, task="summary"):
 
 @app.route("/compare/ui", methods=["GET", "POST"])
 def compare_ui():
-    if request.method == "POST":
-        f1 = request.form.get("report1")
-        f2 = request.form.get("report2")
-        if not f1 or not f2:
-            flash("Please select two reports")
-            return redirect(url_for("compare_ui"))
-        r1, r2 = load_report(f1), load_report(f2)
-        diff = {
-            "new_findings": [f for f in r2.get("findings", []) if f not in r1.get("findings", [])],
-            "resolved_findings": [f for f in r1.get("findings", []) if f not in r2.get("findings", [])]
-        }
-        explanation = ai_explain("Compare two scan results", context=json.dumps(diff))
-        return render_template("compare.html", report1=f1, report2=f2, diff=diff, explanation=explanation)
+    reports = list_reports()
+    diff = None
+    score_card = None
+    explanation = None
 
-    return render_template("compare.html", reports=list_reports())
+    # Pre-select report1 from query param
+    selected_report1 = request.args.get("report1", "")
+
+    if request.method == "POST":
+        r1_name = request.form.get("report1")
+        r2_name = request.form.get("report2")
+
+        if not r1_name or not r2_name:
+            flash("Please select two reports", "warning")
+            return redirect(url_for("compare_ui"))
+
+        r1, r2 = load_report(r1_name), load_report(r2_name)
+
+        diff = {
+            "new_findings": [f for f in r2.get("xss", []) + r2.get("sqli", [])
+                             if f not in r1.get("xss", []) + r1.get("sqli", [])],
+            "resolved_findings": [f for f in r1.get("xss", []) + r1.get("sqli", [])
+                                  if f not in r2.get("xss", []) + r2.get("sqli", [])],
+        }
+
+        score_card = {
+            "report1_issues": len(r1.get("xss", [])) + len(r1.get("sqli", [])),
+            "report2_issues": len(r2.get("xss", [])) + len(r2.get("sqli", [])),
+            "new_issues": len(diff["new_findings"]),
+            "resolved_issues": len(diff["resolved_findings"]),
+        }
+
+        explanation = ai_explain(
+            "Compare two scan reports and explain the differences, suggest priorities",
+            context=json.dumps({"diff": diff, "score_card": score_card}, indent=2)
+        )
+
+    return render_template(
+        "compare.html",
+        reports=reports,
+        diff=diff,
+        explanation=explanation,
+        score_card=score_card,
+        selected_report1=selected_report1
+    )
 
 
 @app.route("/run", methods=["POST"])

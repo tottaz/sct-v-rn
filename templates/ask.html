@@ -33,8 +33,20 @@
 
 {% if answer %}
 <div class="mt-4">
-    <h4>AI Response:</h4>
-    <div class="card p-3 bg-light" style="white-space: pre-wrap;">{{ answer | safe }}</div>
+    <h4>AI Response</h4>
+    <div class="card p-3 bg-light">
+        {% for line in answer.split('\n') %}
+            {% if line.startswith('**') and line.endswith('**') %}
+                <h5>{{ line[2:-2] }}</h5>
+            {% elif line.startswith('* ') %}
+                <ul><li>{{ line[2:] }}</li></ul>
+            {% else %}
+                <p>{{ line }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
 </div>
 {% endif %}
+
+
 {% endblock %}
