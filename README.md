@@ -35,7 +35,7 @@ cd sct-vorn
 2. Install required Python packages:
 
 ```bash
-pip install flask requests beautifulsoup4
+pip install -r requirements.txt
 ```
 
 Run the app:
@@ -88,7 +88,9 @@ GitHub: https://github.com/tottaz/sct-v-rn
 AI Setup (Optional)
 
 Install Ollama
-.
+```bash
+https://www.ollama.com/
+```
 
 Pull a local model:
 
