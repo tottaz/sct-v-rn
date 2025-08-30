@@ -1,0 +1,37 @@
+{
+  "target": "https://socialclimate.tech",
+  "common_ports": [
+    21,
+    22,
+    25,
+    80,
+    443,
+    3306,
+    8080
+  ],
+  "common_dirs": [
+    "admin/",
+    "backup/",
+    "config/",
+    "uploads/",
+    "login/",
+    "dashboard/",
+    "api/",
+    "data/",
+    "docs/"
+  ],
+  "xss_test_payloads": [
+    "<script>alert('XSS')</script>",
+    "\"><script>alert('XSS')</script>"
+  ],
+  "sqli_test_payloads": [
+    "'",
+    "\"",
+    "' OR '1'='1",
+    "\" OR \"1\"=\"1"
+  ],
+  "csrf_keywords": [
+    "csrf",
+    "token"
+  ]
+}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <h2>Compare Reports</h2>
+
+    {% if reports %}
+      <form method="POST" class="mb-4">
+        <div class="row g-2">
+          <div class="col-md-5">
+            <label for="report1" class="form-label">Report 1</label>
+            <select id="report1" name="report1" class="form-select">
+              {% for r in reports %}
+                <option value="{{ r }}" {% if r == report1 %}selected{% endif %}>{{ r }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-5">
+            <label for="report2" class="form-label">Report 2</label>
+            <select id="report2" name="report2" class="form-select">
+              {% for r in reports %}
+                <option value="{{ r }}" {% if r == report2 %}selected{% endif %}>{{ r }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-primary w-100">Compare</button>
+          </div>
+        </div>
+      </form>
+    {% endif %}
+
+    {% if diff %}
+      <div class="mb-4">
+        <h4>New Findings</h4>
+        {% if diff.new_findings %}
+          <ul class="list-group">
+            {% for f in diff.new_findings %}
+              <li class="list-group-item list-group-item-warning">{{ f }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted">No new findings.</p>
+        {% endif %}
+      </div>
+
+      <div class="mb-4">
+        <h4>Resolved Findings</h4>
+        {% if diff.resolved_findings %}
+          <ul class="list-group">
+            {% for f in diff.resolved_findings %}
+              <li class="list-group-item list-group-item-success">{{ f }}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-muted">No resolved findings.</p>
+        {% endif %}
+      </div>
+
+      {% if explanation %}
+        <div class="mb-4">
+          <h4>AI Explanation</h4>
+          <div class="card p-3 bg-light" style="white-space: pre-wrap;">
+            {{ explanation | safe }}
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+
+    <div class="mt-3">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">Back</a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+

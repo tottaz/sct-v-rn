@@ -82,5 +82,28 @@ Contribution
 
 Contributions are welcome! Feel free to submit pull requests or open issues.
 
-Author: Torbjorn Zetterlund
-GitHub: https://github.com/YOUR_USERNAME/vorn
+Author: Social CLimate Tech
+GitHub: https://github.com/tottaz/sct-v-rn
+
+AI Setup (Optional)
+
+Install Ollama
+.
+
+Pull a local model:
+
+```bash
+ollama pull codellama
+```
+
+Start Ollama (runs on http://localhost:11434 by default).
+
+API Endpoints
+
+POST /scan → run a scan and save report
+
+GET /reports → list all reports
+
+POST /compare → compare two reports and get AI explanation
+
+POST /ask → ask AI about latest report

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Ask AI</h2>
+
+<form method="POST" class="mb-3">
+    <div class="mb-3">
+        <label for="report_select" class="form-label">Select Report for Context (optional)</label>
+        <select id="report_select" name="report_select" class="form-select">
+            <option value="">-- None --</option>
+            {% for r in reports %}
+            <option value="{{ r }}" {% if r == selected_report %}selected{% endif %}>{{ r }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="task" class="form-label">AI Task</label>
+        <select name="task" id="task" class="form-select">
+            <option value="summary" {% if task == "summary" %}selected{% endif %}>Summary</option>
+            <option value="risk" {% if task == "risk" %}selected{% endif %}>Risk Prioritization</option>
+            <option value="explanation" {% if task == "explanation" %}selected{% endif %}>Explain Vulnerabilities</option>
+            <option value="patch" {% if task == "patch" %}selected{% endif %}>Secure Code Suggestions</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="question" class="form-label">Or ask a custom question</label>
+        <textarea class="form-control" id="question" name="question" rows="3">{{ question or "" }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Ask AI</button>
+</form>
+
+{% if answer %}
+<div class="mt-4">
+    <h4>AI Response:</h4>
+    <div class="card p-3 bg-light" style="white-space: pre-wrap;">{{ answer | safe }}</div>
+</div>
+{% endif %}
+{% endblock %}

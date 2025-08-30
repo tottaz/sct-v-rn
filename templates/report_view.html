@@ -90,17 +90,17 @@
       </div>
 
       <div class="d-flex gap-2">
-        <a class="btn btn-primary" href="{{ url_for('index') }}">Back</a>
-        <a class="btn btn-outline-secondary" href="/">Run another scan</a>
+        <a class="btn btn-primary" href="{{ url_for('reports_list') }}">Back to Reports</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('index') }}">Run another scan</a>
         <button class="btn btn-info" id="compareBtn">Compare Reports</button>
         <button class="btn btn-warning" id="askAiBtn">Chat with AI</button>
-        <a href="{{ url_for('ask_ui') }}?report={{ report_filename }}" class="btn btn-secondary">Ask AI about this report</a>
+        <a href="{{ url_for('ask_ui') }}" class="btn btn-primary">Ask AI About Report</a>
       </div>
 
     </div>
   </div>
 
-    <!-- Modal for AI Question -->
+  <!-- Modal for AI Question -->
 <div class="modal fade" id="askAiModal" tabindex="-1" aria-labelledby="askAiLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
