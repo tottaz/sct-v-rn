@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <h2>Scan Report</h2>
+      <p class="text-muted">Target: <strong>{{ config.target }}</strong></p>
+
+      <div class="mb-4">
+        <h3>Summary</h3>
+        <ul>
+          <li>Started: {{ report.meta.started }}</li>
+          <li>Endpoints discovered: {{ report.endpoints | length }}</li>
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <h3>Security Headers</h3>
+        <ul class="list-group">
+          {% for i in report.headers %}
+            <li class="list-group-item list-group-item-light">{{ i }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <h3>SSL</h3>
+        <ul class="list-group">
+          {% for i in report.ssl %}
+            <li class="list-group-item list-group-item-info">{{ i }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <h3>Open Ports</h3>
+        <ul class="list-group">
+          {% for p, open in report.ports %}
+            <li class="list-group-item {% if open %}list-group-item-success{% else %}list-group-item-secondary{% endif %}">
+              {{ p }} — {% if open %}OPEN{% else %}closed{% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <h3>Endpoints</h3>
+        <ul class="list-group">
+          {% for e in report.endpoints %}
+            <li class="list-group-item">{{ e }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <h4 style="color:red">XSS Findings</h4>
+          <ul class="list-group">
+            {% for x in report.xss %}
+              <li class="list-group-item list-group-item-danger">{{ x }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <h4 style="color:orange">SQLi Findings</h4>
+          <ul class="list-group">
+            {% for s in report.sqli %}
+              <li class="list-group-item list-group-item-warning">{{ s }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <h4 style="color:goldenrod">CSRF Missing Tokens</h4>
+        <ul class="list-group">
+          {% for c in report.csrf %}
+            <li class="list-group-item list-group-item-warning">{{ c }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="mb-4">
+        <h4 style="color:green">Form Fuzz Results</h4>
+        <ul class="list-group">
+          {% for f in report.form_fuzz %}
+            <li class="list-group-item list-group-item-success">{{ f }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a class="btn btn-primary" href="{{ url_for('index') }}">Back</a>
+        <a class="btn btn-outline-secondary" href="/">Run another scan</a>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}

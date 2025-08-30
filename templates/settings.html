@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <h2>Scanner Settings</h2>
+      <form method="post" action="{{ url_for('settings') }}">
+        <div class="mb-3">
+          <label class="form-label">Target (full URL)</label>
+          <input class="form-control" name="target" value="{{ config.target }}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Common Ports (comma separated)</label>
+          <input class="form-control" name="common_ports" value="{{ config.common_ports | join(',') }}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Common Dirs (comma separated)</label>
+          <input class="form-control" name="common_dirs" value="{{ config.common_dirs | join(',') }}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">XSS Payloads (comma separated)</label>
+          <input class="form-control" name="xss_test_payloads" value="{{ config.xss_test_payloads | join(',') }}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">SQLi Payloads (comma separated)</label>
+          <input class="form-control" name="sqli_test_payloads" value="{{ config.sqli_test_payloads | join(',') }}">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">CSRF Keywords (comma separated)</label>
+          <input class="form-control" name="csrf_keywords" value="{{ config.csrf_keywords | join(',') }}">
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" type="submit">Save</button>
+          <a class="btn btn-link" href="{{ url_for('index') }}">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

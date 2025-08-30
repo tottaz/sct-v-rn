@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title">Scanner Menu</h2>
+          <p class="card-text">Target: <strong>{{ config.target }}</strong></p>
+
+          <form method="post" action="{{ url_for('run_scan') }}">
+            <div class="mb-3">
+              <select name="kind" class="form-select">
+                <option value="headers">1. Security Headers</option>
+                <option value="ssl">2. SSL Certificate</option>
+                <option value="ports">3. Open Ports</option>
+                <option value="crawl">4. Directory / Endpoint Fuzzing</option>
+                <option value="xss">5. XSS Test</option>
+                <option value="sqli">6. SQLi Test</option>
+                <option value="csrf">7. CSRF Check</option>
+                <option value="fuzz">8. Form Fuzz</option>
+                <option value="full" selected>9. Full Scan</option>
+              </select>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-primary">Run Scan</button>
+              <a class="btn btn-outline-secondary" href="{{ url_for('settings') }}">Settings</a>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -28,8 +28,8 @@ It allows security enthusiasts and developers to perform basic automated securit
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/vorn.git
-cd vorn
+git clone https://github.com/tottaz/sct-v-rn.git
+cd sct-vorn
 ```
 
 2. Install required Python packages:
